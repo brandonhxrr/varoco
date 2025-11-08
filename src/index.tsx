@@ -1,0 +1,8 @@
+import { AppRegistry } from 'react-native'
+import App from './App'
+
+AppRegistry.registerComponent("VaroCo", () => App)
+AppRegistry.runApplication("VaroCo", {
+  initialProps: {},
+  rootTag: document.getElementById('root'),
+})
