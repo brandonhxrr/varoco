@@ -14,10 +14,12 @@ type Env struct {
 	Db *mongo.Database
 }
 
-// NewEnvFromEnvVars connects to MongoDB using environment variables and returns an Env.
-// It supports both authenticated and unauthenticated setups.
-// Required: DB_HOST, DB_PORT, DB_NAME
-// Optional: DB_USER, DB_PASSWORD
+// NewEnvFromEnvVars creates an Env by connecting to MongoDB using environment variables.
+// Params:
+//   - ctx: Context used to control and cancel the connection attempt.
+// Returns:
+//   - *Env: Environment containing the connected mongo.Database.
+//   - error: If required environment variables are missing or the connection fails.
 func NewEnvFromEnvVars(ctx context.Context) (*Env, error) {
 	host := os.Getenv("DB_HOST")
 	port := os.Getenv("DB_PORT")
