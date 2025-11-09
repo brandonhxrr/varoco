@@ -1,6 +1,7 @@
 package routes
 
 import (
+	"backend/controllers/causes"
 	"backend/controllers/donations"
 	"backend/controllers/payments"
 	"backend/controllers/users"
@@ -12,8 +13,16 @@ import (
 
 func API_Routes(routerGroup *gin.Engine, env *server.Env, ctx context.Context) {
 	usersRoutes(routerGroup.Group("/users"), env, ctx)
+	causesRoutes(routerGroup.Group("/causes"), env, ctx)
 	paymentsRoutes(routerGroup.Group("/payments"), env, ctx)
 	donationsRoutes(routerGroup.Group("/donations"), env, ctx)
+}
+
+func causesRoutes(routerGroup *gin.RouterGroup, env *server.Env, ctx context.Context) {
+	causesCtrl := causes.NewCausesController()
+	routerGroup.POST("", causesCtrl.CreateCause(env, ctx))
+	routerGroup.GET("", causesCtrl.GetCauses(env, ctx))
+	routerGroup.GET("/:id", causesCtrl.GetCauseByID(env, ctx))
 }
 
 func usersRoutes(routerGroup *gin.RouterGroup, env *server.Env, ctx context.Context) {
