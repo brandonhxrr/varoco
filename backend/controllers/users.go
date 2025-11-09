@@ -12,15 +12,7 @@ func NewUsersController() *UsersController {
 	return &UsersController{}
 }
 
-func (ctrl *UsersController) DeleteUser(env *server.Env) gin.HandlerFunc {
-	panic("unimplemented")
-}
-
-func (ctrl *UsersController) UpdateUser(env *server.Env) gin.HandlerFunc {
-	panic("unimplemented")
-}
-
-func (ctrl *UsersController) GetUserByID(env *server.Env) gin.HandlerFunc {
+func (ctrl *UsersController) CreateUser(env *server.Env) gin.HandlerFunc {
 	panic("unimplemented")
 }
 
@@ -28,7 +20,15 @@ func (ctrl *UsersController) GetUsers(env *server.Env) gin.HandlerFunc {
 	panic("unimplemented")
 }
 
-func (ctrl *UsersController) CreateUser(env *server.Env) gin.HandlerFunc {
+func (ctrl *UsersController) GetUserByID(env *server.Env) gin.HandlerFunc {
+	panic("unimplemented")
+}
+
+func (ctrl *UsersController) UpdateUser(env *server.Env) gin.HandlerFunc {
+	panic("unimplemented")
+}
+
+func (ctrl *UsersController) DeleteUser(env *server.Env) gin.HandlerFunc {
 	panic("unimplemented")
 }
 

@@ -44,10 +44,14 @@ func donations(routerGroup *gin.RouterGroup, env *server.Env) {
 	routerGroup.DELETE("/:id", donationsController.DeleteDonation(env))
 }
 
-func group1(routerGroup *gin.RouterGroup, env *server.Env) {
-	panic("unimplemented")
+func group1(routerGroup *gin.RouterGroup, _ *server.Env) {
+	routerGroup.GET("/example1", func(c *gin.Context) {
+		c.JSON(200, gin.H{"message": "group1 example route"})
+	})
 }
 
-func group2(routerGroup *gin.RouterGroup, env *server.Env) {
-	panic("unimplemented")
+func group2(routerGroup *gin.RouterGroup, _ *server.Env) {
+	routerGroup.GET("/example2", func(c *gin.Context) {
+		c.JSON(200, gin.H{"message": "group2 example route"})
+	})
 }
