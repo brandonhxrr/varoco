@@ -16,7 +16,7 @@ const NavBar: React.FC<NavBarProps> = ({ onAction }) => {
   <Logo width={50} height={50} />
       <View style={styles.options}>
         {options.map((opt) => (
-          <View key={opt} style={styles.optionWrapper}>
+          <View style={styles.optionWrapper}>
             <Text style={styles.option}>{opt}</Text>
           </View>
         ))}
