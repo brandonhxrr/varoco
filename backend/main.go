@@ -15,7 +15,7 @@ func main() {
 		log.Fatal("Error loading .env file")
 	}
 
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
 
 	// Initialize environment (Mongo connection)
@@ -25,7 +25,7 @@ func main() {
 	}
 
 	// Setup and create the Gin router
-	r := setupRouter(env, &ctx)
+	r := setupRouter(env, ctx)
 	port := os.Getenv("PORT")
 	if port == "" {
 		log.Fatal("Unable to start server: Required configuration missing")

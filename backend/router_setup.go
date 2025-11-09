@@ -9,7 +9,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func setupRouter(env *server.Env, ctx *context.Context) *gin.Engine {
+func setupRouter(env *server.Env, ctx context.Context) *gin.Engine {
 	router := gin.Default()
 
 	log.Println("Setting up CORS middleware...")

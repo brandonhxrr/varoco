@@ -13,7 +13,7 @@ func NewPaymentsController() *PaymentsController {
 	return &PaymentsController{}
 }
 
-func (ctrl *PaymentsController) CreatePayment(env *server.Env, ctx *context.Context) gin.HandlerFunc {
+func (ctrl *PaymentsController) CreatePayment(env *server.Env, ctx context.Context) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var paymentRequest struct {
 			Amount   float64 `json:"amount" binding:"required"`
@@ -38,7 +38,7 @@ func (ctrl *PaymentsController) CreatePayment(env *server.Env, ctx *context.Cont
 	}
 }
 
-func (ctrl *PaymentsController) GetPaymentHistory(env *server.Env, ctx *context.Context) gin.HandlerFunc {
+func (ctrl *PaymentsController) GetPaymentHistory(env *server.Env, ctx context.Context) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		userID := c.Query("user_id")
 		if userID == "" {

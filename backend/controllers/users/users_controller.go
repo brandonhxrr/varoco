@@ -43,7 +43,7 @@ func NewUsersController() *UsersController {
 }
 
 // CreateUser handles user registration.
-func (ctrl *UsersController) CreateUser(env *server.Env, ctx *context.Context) gin.HandlerFunc {
+func (ctrl *UsersController) CreateUser(env *server.Env, ctx context.Context) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var req createUserRequest
 		if err := c.ShouldBindJSON(&req); err != nil {
@@ -86,7 +86,7 @@ func (ctrl *UsersController) CreateUser(env *server.Env, ctx *context.Context) g
 			UpdatedAt:     now,
 		}
 
-		if _, err := usersCol.InsertOne(*ctx, user); err != nil {
+		if _, err := usersCol.InsertOne(ctx, user); err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to create user"})
 			return
 		}
@@ -102,7 +102,7 @@ func (ctrl *UsersController) CreateUser(env *server.Env, ctx *context.Context) g
 	}
 }
 
-func (ctrl *UsersController) GetUsers(env *server.Env, ctx *context.Context) gin.HandlerFunc {
+func (ctrl *UsersController) GetUsers(env *server.Env, ctx context.Context) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		ctx, cancel := context.WithTimeout(c.Request.Context(), 10*time.Second)
 		defer cancel()
@@ -126,7 +126,7 @@ func (ctrl *UsersController) GetUsers(env *server.Env, ctx *context.Context) gin
 	}
 }
 
-func (ctrl *UsersController) GetUserByID(env *server.Env, ctx *context.Context) gin.HandlerFunc {
+func (ctrl *UsersController) GetUserByID(env *server.Env, ctx context.Context) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		ctx, cancel := context.WithTimeout(c.Request.Context(), 10*time.Second)
 		defer cancel()
@@ -149,7 +149,7 @@ func (ctrl *UsersController) GetUserByID(env *server.Env, ctx *context.Context) 
 	}
 }
 
-func (ctrl *UsersController) UpdateUser(env *server.Env, ctx *context.Context) gin.HandlerFunc {
+func (ctrl *UsersController) UpdateUser(env *server.Env, ctx context.Context) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		ctx, cancel := context.WithTimeout(c.Request.Context(), 10*time.Second)
 		defer cancel()
@@ -181,7 +181,7 @@ func (ctrl *UsersController) UpdateUser(env *server.Env, ctx *context.Context) g
 	}
 }
 
-func (ctrl *UsersController) DeleteUser(env *server.Env, ctx *context.Context) gin.HandlerFunc {
+func (ctrl *UsersController) DeleteUser(env *server.Env, ctx context.Context) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		ctx, cancel := context.WithTimeout(c.Request.Context(), 10*time.Second)
 		defer cancel()

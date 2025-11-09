@@ -10,13 +10,13 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func API_Routes(routerGroup *gin.Engine, env *server.Env, ctx *context.Context) {
+func API_Routes(routerGroup *gin.Engine, env *server.Env, ctx context.Context) {
 	usersRoutes(routerGroup.Group("/users"), env, ctx)
 	paymentsRoutes(routerGroup.Group("/payments"), env, ctx)
 	donationsRoutes(routerGroup.Group("/donations"), env, ctx)
 }
 
-func usersRoutes(routerGroup *gin.RouterGroup, env *server.Env, ctx *context.Context) {
+func usersRoutes(routerGroup *gin.RouterGroup, env *server.Env, ctx context.Context) {
 	usersCtrl := users.NewUsersController()
 	routerGroup.POST("", usersCtrl.CreateUser(env, ctx))
 	routerGroup.GET("", usersCtrl.GetUsers(env, ctx))
@@ -25,13 +25,13 @@ func usersRoutes(routerGroup *gin.RouterGroup, env *server.Env, ctx *context.Con
 	routerGroup.DELETE("/:id", usersCtrl.DeleteUser(env, ctx))
 }
 
-func paymentsRoutes(routerGroup *gin.RouterGroup, env *server.Env, ctx *context.Context) {
+func paymentsRoutes(routerGroup *gin.RouterGroup, env *server.Env, ctx context.Context) {
 	paymentsCtrl := payments.NewPaymentsController()
 	routerGroup.POST("", paymentsCtrl.CreatePayment(env, ctx))
 	routerGroup.GET("", paymentsCtrl.GetPaymentHistory(env, ctx))
 }
 
-func donationsRoutes(routerGroup *gin.RouterGroup, env *server.Env, ctx *context.Context) {
+func donationsRoutes(routerGroup *gin.RouterGroup, env *server.Env, ctx context.Context) {
 	donationsCtrl := donations.NewDonationsController()
 	routerGroup.POST("", donationsCtrl.CreateDonation(env, ctx))
 	routerGroup.GET("", donationsCtrl.GetDonation(env, ctx))
