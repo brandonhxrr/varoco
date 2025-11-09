@@ -6,13 +6,13 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type PingHandler struct{}
+type PingController struct{}
 
-func New() *PingHandler {
-	return &PingHandler{}
+func NewPingController() *PingController {
+	return &PingController{}
 }
 
-func (h *PingHandler) PingController(env *server.Env) func(*gin.Context) {
+func (ctrl *PingController) PingController(env *server.Env) func(*gin.Context) {
 	return func(c *gin.Context) {
 		c.JSON(200, gin.H{
 			"message": "pong",
