@@ -10,8 +10,6 @@ interface NavBarProps {
   userName?: string;
 }
 
-const options = ["Inicio", "Proyectos", "Contacto"];
-
 const NavBar: React.FC<NavBarProps> = ({ onAction, userName }) => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -58,7 +56,6 @@ const NavBar: React.FC<NavBarProps> = ({ onAction, userName }) => {
     display: 'block',
   };
 
-  // Cierra el menú si se hace clic fuera
   React.useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
@@ -118,18 +115,6 @@ const NavBar: React.FC<NavBarProps> = ({ onAction, userName }) => {
           </TouchableOpacity>
           {menuOpen && (
             <div ref={menuRef} style={menuFloatingStyle}>
-              <div style={menuItemStyle} onClick={() => { setMenuOpen(false); navigate('/dashboard'); }}>
-                <span style={menuTextStyle}>Dashboard</span>
-              </div>
-              <div style={menuItemStyle} onClick={() => { setMenuOpen(false); navigate('/history'); }}>
-                <span style={menuTextStyle}>Payment History</span>
-              </div>
-              <div style={menuItemStyle} onClick={() => { setMenuOpen(false); navigate('/requests'); }}>
-                <span style={menuTextStyle}>My Requests</span>
-              </div>
-              <div style={menuItemStyle} onClick={() => { setMenuOpen(false); navigate('/settings'); }}>
-                <span style={menuTextStyle}>Settings</span>
-              </div>
               <div style={{ ...menuItemStyle, borderBottom: 'none', color: '#d32f2f' }} onClick={() => { setMenuOpen(false); if (window.onLogout) window.onLogout(); }}>
                 <span style={{ ...menuTextStyle, color: '#d32f2f' }}>Log out</span>
               </div>

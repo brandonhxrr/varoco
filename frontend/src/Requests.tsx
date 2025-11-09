@@ -10,7 +10,7 @@ const mockRequests = [
 
 const Requests: React.FC = () => (
   <View style={styles.container}>
-  <Text style={styles.title}>My Requests</Text>
+  <Text style={styles.title}>Requests</Text>
     <View style={{ width: '100%', marginTop: 16 }}>
       <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 8 }}>
         <Text style={{ color: '#bbb', fontWeight: 'bold', width: 180, fontSize: 16 }}>Name</Text>
