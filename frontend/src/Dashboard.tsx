@@ -1,102 +1,105 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState } from 'react';
 import { View, StyleSheet, TouchableOpacity } from 'react-native';
 import Text from './Text';
+import FundRequest from './FundRequest';
+import SendPayment from './SendPayment';
+import History from './History';
+import Settings from './Settings';
+
+const MENU = [
+  { key: 'fund', label: 'Request Payment' },
+  { key: 'send', label: 'Send Payment' },
+  { key: 'history', label: 'History' },
+  { key: 'settings', label: 'Settings' },
+];
 
 const Dashboard: React.FC<{ userName: string }> = ({ userName }) => {
-  const navigate = useNavigate();
+  const [selected, setSelected] = useState('fund');
+
+  let content;
+  switch (selected) {
+    case 'fund':
+      content = <FundRequest />;
+      break;
+    case 'send':
+      content = <SendPayment />;
+      break;
+    case 'history':
+      content = <History />;
+      break;
+    case 'settings':
+      content = <Settings />;
+      break;
+    default:
+      content = null;
+  }
+
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Welcome, {userName}!</Text>
-      <View style={styles.actionsRow}>
-        <TouchableOpacity style={styles.actionCard} onPress={() => navigate('/request')}>
-          <Text style={styles.actionTitle}>Request Payment</Text>
-          <Text style={styles.actionDesc}>Create a request to receive funds easily and securely.</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.actionCard} onPress={() => navigate('/send')}>
-          <Text style={styles.actionTitle}>Send Payment</Text>
-          <Text style={styles.actionDesc}>Transfer money to other users or campaigns instantly.</Text>
-        </TouchableOpacity>
+    <View style={styles.dashboardWrap}>
+      <View style={styles.sidebar}>
+        {MENU.map(item => (
+          <TouchableOpacity
+            key={item.key}
+            style={[styles.menuItem, selected === item.key && styles.menuItemActive]}
+            onPress={() => setSelected(item.key)}
+          >
+            <Text style={styles.menuText}>{item.label}</Text>
+          </TouchableOpacity>
+        ))}
       </View>
-      {/* User options are now in the floating NavBar menu */}
-      <Text style={styles.tip}>Tip: You can request group payments or schedule automatic payments for convenience.</Text>
+      <View style={styles.contentArea}>
+        {content}
+      </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
+  dashboardWrap: {
+    flexDirection: 'row',
+    position: 'absolute',
+    top: 64, // Altura estimada de la NavBar
+    left: 0,
+    right: 0,
+    bottom: 0,
     width: '100%',
-    maxWidth: 900,
-    minHeight: 520,
-    marginTop: 32,
-    alignSelf: 'center',
+  height: '100%',
     backgroundColor: 'rgba(30,30,30,0.95)',
-    borderRadius: 24,
-    padding: 48,
-    alignItems: 'center',
-    overflow: 'visible',
+    overflow: 'hidden',
   },
-  title: {
-    fontSize: 26,
-    fontWeight: '700',
-    color: '#fff',
-    marginBottom: 24,
-    textAlign: 'center',
+  sidebar: {
+    width: 220,
+  backgroundColor: '#1C1C1C',
+    paddingVertical: 36,
+    paddingHorizontal: 18,
+    borderRightWidth: 1,
+    borderRightColor: 'rgba(255,255,255,0.10)',
+    alignItems: 'flex-start',
+    gap: 8,
   },
-  actionsRow: {
-    flexDirection: 'row',
-    gap: 24,
-    marginBottom: 32,
-    justifyContent: 'center',
+  // userTitle eliminado
+  menuItem: {
+    width: '100%',
+    paddingVertical: 12,
+    paddingHorizontal: 10,
+    borderRadius: 8,
+    marginBottom: 4,
+    backgroundColor: 'transparent',
   },
-  actionCard: {
-    backgroundColor: 'rgba(255,255,255,0.08)',
-    borderRadius: 14,
-    padding: 24,
-    minWidth: 180,
-    alignItems: 'center',
-    borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.18)',
-  // boxShadow: '0 2px 8px rgba(0,0,0,0.10)',
+  menuItemActive: {
+    backgroundColor: 'rgba(78,97,211,0.18)',
   },
-  actionTitle: {
-    color: '#4E61D3',
-    fontWeight: '700',
-    fontSize: 18,
-    marginBottom: 8,
-  },
-  actionDesc: {
-    color: '#fff',
-    fontSize: 14,
-    textAlign: 'center',
-  },
-  extraRow: {
-    flexDirection: 'row',
-    gap: 16,
-    marginBottom: 24,
-    justifyContent: 'center',
-  },
-  extraCard: {
-    backgroundColor: 'rgba(255,255,255,0.05)',
-    borderRadius: 10,
-    padding: 14,
-    minWidth: 120,
-    alignItems: 'center',
-    borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.12)',
-  },
-  extraTitle: {
-    color: '#fff',
-    fontWeight: '600',
-    fontSize: 15,
-  },
-  tip: {
+  menuText: {
     color: '#bbb',
-    fontSize: 13,
-    marginTop: 12,
-    textAlign: 'center',
-    fontStyle: 'italic',
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  contentArea: {
+    flex: 1,
+    padding: 36,
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    minHeight: 600,
   },
 });
 
