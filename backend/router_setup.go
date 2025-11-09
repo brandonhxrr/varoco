@@ -9,13 +9,13 @@ import (
 )
 
 func setupRouter(env *server.Env) *gin.Engine {
-	r := gin.Default()
+	router := gin.Default()
 
 	log.Println("Setting up CORS middleware...")
-	setupCors(r)
+	setupCors(router)
 
 	log.Println("Registering application routes...")
-	routes.API_Routes(r, env)
+	routes.API_Routes(router, env)
 
-	return r
+	return router
 }
