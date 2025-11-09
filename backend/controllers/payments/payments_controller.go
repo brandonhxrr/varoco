@@ -1,4 +1,4 @@
-package controllers
+package payments
 
 import (
 	"backend/server"
@@ -12,11 +12,11 @@ func NewPaymentsController() *PaymentsController {
 	return &PaymentsController{}
 }
 
-func (ctrl *PaymentsController) GetPaymentHistory(env *server.Env) gin.HandlerFunc {
+func (ctrl *PaymentsController) CreatePayment(env *server.Env) gin.HandlerFunc {
 	panic("unimplemented")
 }
 
-func (ctrl *PaymentsController) CreatePayment(env *server.Env) gin.HandlerFunc {
+func (ctrl *PaymentsController) GetPaymentHistory(env *server.Env) gin.HandlerFunc {
 	panic("unimplemented")
 }
 

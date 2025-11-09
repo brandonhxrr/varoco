@@ -1,6 +1,7 @@
-package controllers
+package users
 
 import (
+	"backend/models"
 	"backend/server"
 	"context"
 	"errors"
@@ -15,26 +16,6 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 	"golang.org/x/crypto/bcrypt"
 )
-
-// User represents the stored user document in MongoDB.
-// IDs are UUIDv4 (string) to maintain consistency across potential polyglot services.
-// WalletAddress is intentionally left empty at creation time because
-// this initial registration flow targets users who DO NOT yet have an
-// Open Payments / Interledger wallet. A later onboarding step will allow
-// linking or provisioning a wallet address (or payment pointer) and possibly
-// associating provider metadata.
-type User struct {
-	ID            string    `bson:"_id,omitempty" json:"id"`
-	Name          string    `bson:"name" json:"name"`
-	Email         string    `bson:"email" json:"email"`
-	PasswordHash  string    `bson:"password_hash" json:"-"`
-	WalletAddress string    `bson:"wallet_address" json:"wallet_address"`
-	// Future fields for multi-ASE scenarios (commented out for now):
-	// ProviderID string `bson:"provider_id,omitempty" json:"provider_id,omitempty"`
-	// PaymentPointer string `bson:"payment_pointer,omitempty" json:"payment_pointer,omitempty"`
-	CreatedAt time.Time `bson:"created_at" json:"created_at"`
-	UpdatedAt time.Time `bson:"updated_at" json:"updated_at"`
-}
 
 // createUserRequest is the incoming payload for user registration.
 type createUserRequest struct {
@@ -111,7 +92,7 @@ func (ctrl *UsersController) CreateUser(env *server.Env) gin.HandlerFunc {
 		// Prepare user document (walletAddress intentionally empty)
 		now := time.Now().UTC()
 		id := uuid.NewString()
-		user := User{
+		user := models.User{
 			ID:            id,
 			Name:          strings.TrimSpace(req.Name),
 			Email:         email,
@@ -151,14 +132,6 @@ func (ctrl *UsersController) UpdateUser(env *server.Env) gin.HandlerFunc {
 
 func (ctrl *UsersController) DeleteUser(env *server.Env) gin.HandlerFunc {
 	panic("unimplemented")
-}
-
-func (ctrl *UsersController) UsersController(env *server.Env) func(*gin.Context) {
-	return func(c *gin.Context) {
-		c.JSON(200, gin.H{
-			"message": "pong",
-		})
-	}
 }
 
 // validateCreateUser performs minimal validation for name, email, and password.

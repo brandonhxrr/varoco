@@ -1,57 +1,40 @@
 package routes
 
 import (
-	"backend/controllers"
+	"backend/controllers/donations"
+	"backend/controllers/payments"
+	"backend/controllers/users"
 	"backend/server"
 
 	"github.com/gin-gonic/gin"
 )
 
 func API_Routes(routerGroup *gin.Engine, env *server.Env) {
-	users(routerGroup.Group("/users"), env)
-	payments(routerGroup.Group("/payments"), env)
-	donations(routerGroup.Group("/donations"), env)
-
-	ping := controllers.NewPingController()
-	routerGroup.GET("/ping", ping.PingController(env))
-
-	// Route groups example
-	group1(routerGroup.Group("group1"), env)
-	group2(routerGroup.Group("group2"), env)
+	usersRoutes(routerGroup.Group("/users"), env)
+	paymentsRoutes(routerGroup.Group("/payments"), env)
+	donationsRoutes(routerGroup.Group("/donations"), env)
 }
 
-func users(routerGroup *gin.RouterGroup, env *server.Env) {
-	usersController := controllers.NewUsersController()
-	routerGroup.POST("", usersController.CreateUser(env))
-	routerGroup.GET("", usersController.GetUsers(env))
-	routerGroup.GET("/:id", usersController.GetUserByID(env))
-	routerGroup.PUT("/:id", usersController.UpdateUser(env))
-	routerGroup.DELETE("/:id", usersController.DeleteUser(env))
+func usersRoutes(routerGroup *gin.RouterGroup, env *server.Env) {
+	usersCtrl := users.NewUsersController()
+	routerGroup.POST("", usersCtrl.CreateUser(env))
+	routerGroup.GET("", usersCtrl.GetUsers(env))
+	routerGroup.GET("/:id", usersCtrl.GetUserByID(env))
+	routerGroup.PUT("/:id", usersCtrl.UpdateUser(env))
+	routerGroup.DELETE("/:id", usersCtrl.DeleteUser(env))
 }
 
-func payments(routerGroup *gin.RouterGroup, env *server.Env) {
-	paymentsController := controllers.NewPaymentsController()
-	routerGroup.POST("", paymentsController.CreatePayment(env))
-	routerGroup.GET("", paymentsController.GetPaymentHistory(env))
+func paymentsRoutes(routerGroup *gin.RouterGroup, env *server.Env) {
+	paymentsCtrl := payments.NewPaymentsController()
+	routerGroup.POST("", paymentsCtrl.CreatePayment(env))
+	routerGroup.GET("", paymentsCtrl.GetPaymentHistory(env))
 }
 
-func donations(routerGroup *gin.RouterGroup, env *server.Env) {
-	donationsController := controllers.NewDonationsController()
-	routerGroup.POST("", donationsController.CreateDonation(env))
-	routerGroup.GET("", donationsController.GetDonation(env))
-	routerGroup.GET("/:id", donationsController.GetDonationByID(env))
-	routerGroup.PUT("/:id", donationsController.UpdateDonation(env))
-	routerGroup.DELETE("/:id", donationsController.DeleteDonation(env))
-}
-
-func group1(routerGroup *gin.RouterGroup, _ *server.Env) {
-	routerGroup.GET("/example1", func(c *gin.Context) {
-		c.JSON(200, gin.H{"message": "group1 example route"})
-	})
-}
-
-func group2(routerGroup *gin.RouterGroup, _ *server.Env) {
-	routerGroup.GET("/example2", func(c *gin.Context) {
-		c.JSON(200, gin.H{"message": "group2 example route"})
-	})
+func donationsRoutes(routerGroup *gin.RouterGroup, env *server.Env) {
+	donationsCtrl := donations.NewDonationsController()
+	routerGroup.POST("", donationsCtrl.CreateDonation(env))
+	routerGroup.GET("", donationsCtrl.GetDonation(env))
+	routerGroup.GET("/:id", donationsCtrl.GetDonationByID(env))
+	routerGroup.PUT("/:id", donationsCtrl.UpdateDonation(env))
+	routerGroup.DELETE("/:id", donationsCtrl.DeleteDonation(env))
 }
