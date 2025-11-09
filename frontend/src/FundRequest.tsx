@@ -3,7 +3,7 @@ import { View, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
 import Text from './Text';
 
 const FundRequest: React.FC = () => {
-  const [type, setType] = useState<'campaña' | 'solicitud'>('campaña');
+  const [type, setType] = useState<'campaign' | 'request'>('campaign');
   const [name, setName] = useState('');
   const [goal, setGoal] = useState('');
   const [amount, setAmount] = useState('');
@@ -14,27 +14,27 @@ const FundRequest: React.FC = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Crear solicitud de fondos</Text>
+  <Text style={styles.title}>Fund Request</Text>
       <View style={styles.formGroup}>
-        <Text style={styles.label}>Nombre de la campaña o solicitud</Text>
-        <TextInput style={styles.input} value={name} onChangeText={setName} placeholder="Ej: Ayuda médica" placeholderTextColor="#bbb" />
+        <Text style={styles.label}>Campaign or Request Name</Text>
+        <TextInput style={styles.input} value={name} onChangeText={setName} placeholder="E.g.: Medical Help" placeholderTextColor="#bbb" />
       </View>
       <View style={styles.formGroup}>
-        <Text style={styles.label}>Tipo</Text>
+        <Text style={styles.label}>Type</Text>
         <View style={styles.typeRow}>
-          <TouchableOpacity style={[styles.typeButton, type === 'campaña' && styles.typeButtonActive]} onPress={() => setType('campaña')}>
-            <Text style={styles.typeText}>Campaña</Text>
+          <TouchableOpacity style={[styles.typeButton, type === 'campaign' && styles.typeButtonActive]} onPress={() => setType('campaign')}>
+            <Text style={styles.typeText}>Campaign</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={[styles.typeButton, type === 'solicitud' && styles.typeButtonActive]} onPress={() => setType('solicitud')}>
-            <Text style={styles.typeText}>Solicitud</Text>
+          <TouchableOpacity style={[styles.typeButton, type === 'request' && styles.typeButtonActive]} onPress={() => setType('request')}>
+            <Text style={styles.typeText}>Request</Text>
           </TouchableOpacity>
         </View>
       </View>
-      {type === 'campaña' ? (
+  {type === 'campaign' ? (
         <View style={styles.formGroup}>
-          <Text style={styles.label}>Meta de la campaña</Text>
+          <Text style={styles.label}>Campaign Goal</Text>
           <TextInput style={styles.input} value={goal} onChangeText={setGoal} placeholder="$1000" keyboardType="numeric" placeholderTextColor="#bbb" />
-          <Text style={styles.label}>Opciones de aportación</Text>
+          <Text style={styles.label}>Contribution Options</Text>
           <View style={styles.amountRow}>
             {options.map((opt, idx) => (
               <div
@@ -71,7 +71,7 @@ const FundRequest: React.FC = () => {
                       zIndex: 2,
                     }}
                     onClick={(e) => { e.stopPropagation(); setOptions(options.filter((_, i) => i !== idx)); setShowDeleteIdx(null); }}
-                    aria-label={`Eliminar opción $${opt}`}
+                    aria-label={`Delete option $${opt}`}
                   >
                     ×
                   </button>
@@ -84,7 +84,7 @@ const FundRequest: React.FC = () => {
               style={styles.input} 
               value={newOption} 
               onChangeText={setNewOption} 
-              placeholder="Agregar opción ($)" 
+              placeholder="Add option ($)" 
               keyboardType="numeric" 
               placeholderTextColor="#bbb"
               onKeyPress={e => {
@@ -103,22 +103,22 @@ const FundRequest: React.FC = () => {
                 } 
               }}
             >
-              <Text style={styles.amountText}>Agregar opción</Text>
+              <Text style={styles.amountText}>Add option</Text>
             </TouchableOpacity>
           </View>
           <View style={[styles.formGroup, { flexDirection: 'row', alignItems: 'center', marginTop: 16, justifyContent: 'space-between' }]}> 
-            <Text style={styles.label}>Incluir opción Otro</Text>
+            <Text style={styles.label}>Include "Other" option</Text>
             <input type="checkbox" checked={includeOther} onChange={() => setIncludeOther(!includeOther)} style={{ marginLeft: 8, width: 18, height: 18, verticalAlign: 'middle' }} />
           </View>
         </View>
       ) : (
         <View style={styles.formGroup}>
-          <Text style={styles.label}>Total solicitado</Text>
+          <Text style={styles.label}>Requested Total</Text>
           <TextInput style={styles.input} value={goal} onChangeText={setGoal} placeholder="$100" keyboardType="numeric" placeholderTextColor="#bbb" />
         </View>
       )}
       <TouchableOpacity style={styles.submitButton}>
-        <Text style={styles.submitText}>Crear solicitud</Text>
+        <Text style={styles.submitText}>Create Request</Text>
       </TouchableOpacity>
     </View>
   );

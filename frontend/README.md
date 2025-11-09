@@ -68,9 +68,7 @@ This will provide more trace information and may help resolve conflicts with dep
 
 ## Acknowledgements
 
-- [React Native Web](https://github.com/necolas/react-native-web)
-- [Inter Font](https://rsms.me/inter/)
-- [Interledger](https://github.com/interledger/interledger)
+- [Interledger](https://github.com/interledger/)
 
 ---
 
