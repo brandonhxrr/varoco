@@ -25,7 +25,7 @@ func main() {
 	}
 
 	// Setup and create the Gin router
-	r := setupRouter(env)
+	r := setupRouter(env, &ctx)
 	port := os.Getenv("PORT")
 	if port == "" {
 		log.Fatal("Unable to start server: Required configuration missing")

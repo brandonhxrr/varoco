@@ -3,17 +3,18 @@ package users
 import (
 	"backend/models"
 	"backend/server"
+	"backend/utils"
 	"context"
-	"errors"
+	"fmt"
 	"net/http"
-	"regexp"
 	"strings"
 	"time"
 
-	"github.com/gin-gonic/gin"
-	"github.com/google/uuid"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
+
+	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -42,13 +43,7 @@ func NewUsersController() *UsersController {
 }
 
 // CreateUser handles user registration.
-// Steps:
-// 1. Validate input (name, email, password)
-// 2. Ensure email uniqueness
-// 3. Hash password with bcrypt
-// 4. Persist user WITHOUT wallet address (reserved for later linking/provisioning)
-// 5. Return sanitized user JSON
-func (ctrl *UsersController) CreateUser(env *server.Env) gin.HandlerFunc {
+func (ctrl *UsersController) CreateUser(env *server.Env, ctx *context.Context) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var req createUserRequest
 		if err := c.ShouldBindJSON(&req); err != nil {
@@ -56,40 +51,29 @@ func (ctrl *UsersController) CreateUser(env *server.Env) gin.HandlerFunc {
 			return
 		}
 
-		// Basic validations
-		if err := validateCreateUser(req); err != nil {
+		if err := utils.ValidateCreateUser(req.Name, req.Email, req.Password); err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			return
 		}
 
-		ctx, cancel := context.WithTimeout(c.Request.Context(), 10*time.Second)
-		defer cancel()
-
 		usersCol := env.Db.Collection("users")
-
-		// Enforce email uniqueness at application level (best-effort; consider adding a unique index later)
 		email := strings.ToLower(strings.TrimSpace(req.Email))
-		if err := ensureEmailAvailable(ctx, usersCol, email); err != nil {
-			if errors.Is(err, mongo.ErrNoDocuments) {
-				// available
-			} else {
-				status := http.StatusInternalServerError
-				if err.Error() == "email_taken" {
-					status = http.StatusConflict
-				}
-				c.JSON(status, gin.H{"error": mapError(err)})
-				return
+		if err := utils.EnsureEmailAvailable(ctx, usersCol, email); err != nil {
+			status := http.StatusInternalServerError
+			if err.Error() == "email_taken" {
+				status = http.StatusConflict
 			}
+			fmt.Println("Validation error:", err)
+			c.JSON(status, gin.H{"error": err.Error()})
+			return
 		}
 
-		// Hash password
 		passwordHash, err := bcrypt.GenerateFromPassword([]byte(req.Password), bcrypt.DefaultCost)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to hash password"})
 			return
 		}
 
-		// Prepare user document (walletAddress intentionally empty)
 		now := time.Now().UTC()
 		id := uuid.NewString()
 		user := models.User{
@@ -102,7 +86,7 @@ func (ctrl *UsersController) CreateUser(env *server.Env) gin.HandlerFunc {
 			UpdatedAt:     now,
 		}
 
-		if _, err := usersCol.InsertOne(ctx, user); err != nil {
+		if _, err := usersCol.InsertOne(*ctx, user); err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to create user"})
 			return
 		}
@@ -118,72 +102,104 @@ func (ctrl *UsersController) CreateUser(env *server.Env) gin.HandlerFunc {
 	}
 }
 
-func (ctrl *UsersController) GetUsers(env *server.Env) gin.HandlerFunc {
-	panic("unimplemented")
-}
+func (ctrl *UsersController) GetUsers(env *server.Env, ctx *context.Context) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		ctx, cancel := context.WithTimeout(c.Request.Context(), 10*time.Second)
+		defer cancel()
 
-func (ctrl *UsersController) GetUserByID(env *server.Env) gin.HandlerFunc {
-	panic("unimplemented")
-}
+		usersCol := env.Db.Collection("users")
+		var users []models.User
 
-func (ctrl *UsersController) UpdateUser(env *server.Env) gin.HandlerFunc {
-	panic("unimplemented")
-}
+		cursor, err := usersCol.Find(ctx, bson.M{})
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to retrieve users"})
+			return
+		}
+		defer cursor.Close(ctx)
 
-func (ctrl *UsersController) DeleteUser(env *server.Env) gin.HandlerFunc {
-	panic("unimplemented")
-}
+		if err = cursor.All(ctx, &users); err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to parse users"})
+			return
+		}
 
-// validateCreateUser performs minimal validation for name, email, and password.
-func validateCreateUser(req createUserRequest) error {
-	name := strings.TrimSpace(req.Name)
-	email := strings.ToLower(strings.TrimSpace(req.Email))
-	password := req.Password
-
-	if name == "" || len(name) < 2 {
-		return errors.New("name must be at least 2 characters")
+		c.JSON(http.StatusOK, users)
 	}
-
-	if !isValidEmail(email) {
-		return errors.New("invalid email")
-	}
-
-	if len(password) < 8 {
-		return errors.New("password must be at least 8 characters")
-	}
-
-	return nil
 }
 
-// isValidEmail validates format with a simple regex.
-func isValidEmail(email string) bool {
-	// Basic email regex; adjust as needed.
-	var re = regexp.MustCompile(`^[^\s@]+@[^\s@]+\.[^\s@]+$`)
-	return re.MatchString(email)
+func (ctrl *UsersController) GetUserByID(env *server.Env, ctx *context.Context) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		ctx, cancel := context.WithTimeout(c.Request.Context(), 10*time.Second)
+		defer cancel()
+
+		usersCol := env.Db.Collection("users")
+		userID := c.Param("id")
+
+		var user models.User
+		err := usersCol.FindOne(ctx, bson.M{"_id": userID}).Decode(&user)
+		if err != nil {
+			if err == mongo.ErrNoDocuments {
+				c.JSON(http.StatusNotFound, gin.H{"error": "user not found"})
+				return
+			}
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to retrieve user"})
+			return
+		}
+
+		c.JSON(http.StatusOK, user)
+	}
 }
 
-// ensureEmailAvailable checks if the email already exists.
-func ensureEmailAvailable(ctx context.Context, col *mongo.Collection, email string) error {
-	var existing bson.M
-	err := col.FindOne(ctx, bson.M{"email": email}).Decode(&existing)
-	if err == nil {
-		return errors.New("email_taken")
+func (ctrl *UsersController) UpdateUser(env *server.Env, ctx *context.Context) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		ctx, cancel := context.WithTimeout(c.Request.Context(), 10*time.Second)
+		defer cancel()
+
+		usersCol := env.Db.Collection("users")
+		userID := c.Param("id")
+
+		var req models.User
+		if err := c.ShouldBindJSON(&req); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "invalid request body"})
+			return
+		}
+
+		req.UpdatedAt = time.Now().UTC()
+
+		update := bson.M{"$set": req}
+		result, err := usersCol.UpdateOne(ctx, bson.M{"_id": userID}, update)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to update user"})
+			return
+		}
+
+		if result.MatchedCount == 0 {
+			c.JSON(http.StatusNotFound, gin.H{"error": "user not found"})
+			return
+		}
+
+		c.JSON(http.StatusOK, gin.H{"message": "user updated successfully"})
 	}
-	if errors.Is(err, mongo.ErrNoDocuments) {
-		return mongo.ErrNoDocuments
-	}
-	return err
 }
 
-// mapError maps internal errors to API-safe messages.
-func mapError(err error) string {
-	if err == nil {
-		return ""
-	}
-	switch err.Error() {
-	case "email_taken":
-		return "email already registered"
-	default:
-		return "internal error"
+func (ctrl *UsersController) DeleteUser(env *server.Env, ctx *context.Context) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		ctx, cancel := context.WithTimeout(c.Request.Context(), 10*time.Second)
+		defer cancel()
+
+		usersCol := env.Db.Collection("users")
+		userID := c.Param("id")
+
+		result, err := usersCol.DeleteOne(ctx, bson.M{"_id": userID})
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to delete user"})
+			return
+		}
+
+		if result.DeletedCount == 0 {
+			c.JSON(http.StatusNotFound, gin.H{"error": "user not found"})
+			return
+		}
+
+		c.JSON(http.StatusOK, gin.H{"message": "user deleted successfully"})
 	}
 }
