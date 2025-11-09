@@ -4,8 +4,8 @@ import Text from './Text';
 
 const About: React.FC = () => (
   <View style={styles.section}>
-    <Text style={styles.title}>¿Qué es Interledger?</Text>
-    <Text style={styles.desc}>Interledger es un protocolo abierto para pagos globales, permitiendo transferencias de valor entre diferentes sistemas de pago y monedas de manera rápida y segura.</Text>
+    <Text style={styles.title}>About VaroCo</Text>
+    <Text style={styles.desc}>VaroCo is a cutting-edge platform that integrates global payments and advanced financial technology for modern businesses. Our mission is to simplify international transactions and empower companies to grow beyond borders with confidence and security.</Text>
   </View>
 );
 

@@ -4,8 +4,8 @@ import Text from './Text';
 
 const Contact: React.FC = () => (
   <View style={styles.section}>
-    <Text style={styles.title}>Contacto</Text>
-    <Text style={styles.desc}>¿Tienes dudas o quieres integrar pagos Interledger en tu negocio? Escríbenos a <Text style={styles.email}>contacto@varoco.com</Text></Text>
+  <Text style={styles.title}>Contact</Text>
+  <Text style={styles.desc}>Do you have questions or want to integrate Interledger payments into your business? Email us at <Text style={styles.email}>contact@varoco.com</Text> and our team will provide expert guidance to help you unlock the full potential of global payments.</Text>
   </View>
 );
 

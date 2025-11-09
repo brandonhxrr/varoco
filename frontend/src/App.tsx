@@ -1,3 +1,8 @@
+declare global {
+  interface Window {
+    onLogout?: () => void;
+  }
+}
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
@@ -8,6 +13,7 @@ import About from './About';
 import Contact from './Contact';
 import Footer from './Footer';
 import FundRequest from './FundRequest';
+import SendPayment from './SendPayment';
 import Auth from './Auth';
 import Dashboard from './Dashboard';
 import History from './History';
@@ -21,20 +27,26 @@ import { useState } from 'react';
 const AppContent: React.FC = () => {
   const navigate = useNavigate();
   const [userName, setUserName] = useState('');
+  // Exponer función global para logout
+  window.onLogout = () => {
+    setUserName('');
+    navigate('/');
+  };
   return (
     <View style={styles.container}>
       <NavBar onAction={() => navigate('/auth')} userName={userName} />
       <Routes>
         <Route path="/" element={
           <>
-            <Hero />
-            <Features />
-            <About />
-            <Contact />
+            <div id="hero-section" className="hero-full-height"><Hero /></div>
+            <div id="features-section"><Features /></div>
+            <div id="about-section"><About /></div>
+            <div id="contact-section"><Contact /></div>
             <Footer />
           </>
         } />
-        <Route path="/solicitud" element={<FundRequest />} />
+  <Route path="/request" element={<FundRequest />} />
+  <Route path="/send" element={<SendPayment />} />
         <Route path="/auth" element={<Auth onLogin={name => { setUserName(name); navigate('/dashboard'); }} />} />
         <Route path="/dashboard" element={<Dashboard userName={userName} />} />
         <Route path="/history" element={<History />} />
@@ -56,10 +68,10 @@ export const App: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     width: '100%',
-    height: '100%',
+  minHeight: 800,
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: 'flex-start',
+    alignItems: 'stretch',
     backgroundColor: '#1C1C1C',
     fontFamily: 'Inter, sans-serif',
   },

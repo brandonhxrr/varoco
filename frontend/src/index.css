@@ -6,3 +6,12 @@ html, body, #root {
   box-sizing: border-box;
   background: #1C1C1C;
 }
+
+.hero-full-height {
+  min-height: 100vh;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-top: 0;
+}

@@ -1,23 +1,25 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { View, StyleSheet, TouchableOpacity } from 'react-native';
 import Text from './Text';
 
 const Dashboard: React.FC<{ userName: string }> = ({ userName }) => {
+  const navigate = useNavigate();
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>¡Bienvenido, {userName}!</Text>
+      <Text style={styles.title}>Welcome, {userName}!</Text>
       <View style={styles.actionsRow}>
-        <TouchableOpacity style={styles.actionCard}>
-          <Text style={styles.actionTitle}>Solicitar pago</Text>
-          <Text style={styles.actionDesc}>Crea una solicitud para recibir fondos fácilmente.</Text>
+        <TouchableOpacity style={styles.actionCard} onPress={() => navigate('/request')}>
+          <Text style={styles.actionTitle}>Request Payment</Text>
+          <Text style={styles.actionDesc}>Create a request to receive funds easily and securely.</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.actionCard}>
-          <Text style={styles.actionTitle}>Realizar pago</Text>
-          <Text style={styles.actionDesc}>Envía dinero a otros usuarios o campañas.</Text>
+        <TouchableOpacity style={styles.actionCard} onPress={() => navigate('/send')}>
+          <Text style={styles.actionTitle}>Send Payment</Text>
+          <Text style={styles.actionDesc}>Transfer money to other users or campaigns instantly.</Text>
         </TouchableOpacity>
       </View>
-      {/* Opciones de usuario ahora estarán en el menú flotante de la NavBar */}
-      <Text style={styles.tip}>Tip: Puedes solicitar pagos grupales o programar pagos automáticos.</Text>
+      {/* User options are now in the floating NavBar menu */}
+      <Text style={styles.tip}>Tip: You can request group payments or schedule automatic payments for convenience.</Text>
     </View>
   );
 };

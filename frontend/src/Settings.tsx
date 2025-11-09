@@ -1,33 +1,38 @@
+declare global {
+  interface Window {
+    onLogout?: () => void;
+  }
+}
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import Text from './Text';
 
 const mockUser = {
-  name: 'Carlos Ramírez',
+  name: 'Carlos Ramirez',
   email: 'carlos.ramirez@email.com',
-  phone: '+52 555 123 4567',
+  phone: '+1 555 123 4567',
   notifications: true,
 };
 
 const Settings: React.FC = () => (
   <View style={styles.container}>
-    <Text style={styles.title}>Configuración</Text>
-    <View style={{ width: '100%', marginTop: 16 }}>
+  <Text style={styles.title}>Settings</Text>
+  <View style={{ width: '100%', marginTop: 16 }}>
       <View style={{ marginBottom: 18 }}>
-        <Text style={{ color: '#bbb', fontWeight: 'bold', fontSize: 17 }}>Nombre</Text>
+        <Text style={{ color: '#bbb', fontWeight: 'bold', fontSize: 17 }}>Name</Text>
         <Text style={{ color: '#fff', fontSize: 19, paddingVertical: 4 }}>{mockUser.name}</Text>
       </View>
       <View style={{ marginBottom: 18 }}>
-        <Text style={{ color: '#bbb', fontWeight: 'bold', fontSize: 17 }}>Correo electrónico</Text>
+        <Text style={{ color: '#bbb', fontWeight: 'bold', fontSize: 17 }}>Email</Text>
         <Text style={{ color: '#fff', fontSize: 19, paddingVertical: 4 }}>{mockUser.email}</Text>
       </View>
       <View style={{ marginBottom: 18 }}>
-        <Text style={{ color: '#bbb', fontWeight: 'bold', fontSize: 17 }}>Teléfono</Text>
+        <Text style={{ color: '#bbb', fontWeight: 'bold', fontSize: 17 }}>Phone</Text>
         <Text style={{ color: '#fff', fontSize: 19, paddingVertical: 4 }}>{mockUser.phone}</Text>
       </View>
       <View style={{ marginBottom: 18 }}>
-        <Text style={{ color: '#bbb', fontWeight: 'bold', fontSize: 17 }}>Notificaciones</Text>
-        <Text style={{ color: '#fff', fontSize: 19, paddingVertical: 4 }}>{mockUser.notifications ? 'Activadas' : 'Desactivadas'}</Text>
+        <Text style={{ color: '#bbb', fontWeight: 'bold', fontSize: 17 }}>Notifications</Text>
+        <Text style={{ color: '#fff', fontSize: 19, paddingVertical: 4 }}>{mockUser.notifications ? 'Enabled' : 'Disabled'}</Text>
       </View>
     </View>
   </View>

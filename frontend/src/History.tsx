@@ -10,20 +10,20 @@ const mockPayments = [
 
 const History: React.FC = () => (
   <View style={styles.container}>
-    <Text style={styles.title}>Historial de pagos</Text>
+  <Text style={styles.title}>Payment History</Text>
     <View style={{ width: '100%', marginTop: 16 }}>
       <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 8 }}>
-        <Text style={{ color: '#bbb', fontWeight: 'bold', width: 120, fontSize: 16 }}>Fecha</Text>
-        <Text style={{ color: '#bbb', fontWeight: 'bold', width: 120, fontSize: 16 }}>Monto</Text>
-        <Text style={{ color: '#bbb', fontWeight: 'bold', width: 180, fontSize: 16 }}>A/De</Text>
-        <Text style={{ color: '#bbb', fontWeight: 'bold', width: 120, fontSize: 16 }}>Tipo</Text>
+        <Text style={{ color: '#bbb', fontWeight: 'bold', width: 120, fontSize: 16 }}>Date</Text>
+        <Text style={{ color: '#bbb', fontWeight: 'bold', width: 120, fontSize: 16 }}>Amount</Text>
+        <Text style={{ color: '#bbb', fontWeight: 'bold', width: 180, fontSize: 16 }}>To/From</Text>
+        <Text style={{ color: '#bbb', fontWeight: 'bold', width: 120, fontSize: 16 }}>Type</Text>
       </View>
       {mockPayments.map(p => (
         <View key={p.id} style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 10, backgroundColor: 'rgba(255,255,255,0.04)', borderRadius: 8, padding: 14 }}>
           <Text style={{ color: '#fff', width: 120, fontSize: 15 }}>{p.date}</Text>
           <Text style={{ color: '#fff', width: 120, fontSize: 15 }}>{p.amount}</Text>
           <Text style={{ color: '#fff', width: 180, fontSize: 15 }}>{p.to}</Text>
-          <Text style={{ color: p.type === 'Enviado' ? '#d32f2f' : '#4E61D3', width: 120, fontSize: 15 }}>{p.type}</Text>
+          <Text style={{ color: p.type === 'Enviado' ? '#d32f2f' : '#4E61D3', width: 120, fontSize: 15 }}>{p.type === 'Enviado' ? 'Sent' : p.type === 'Recibido' ? 'Received' : p.type}</Text>
         </View>
       ))}
     </View>

@@ -4,11 +4,11 @@ import Text from './Text';
 
 const Hero: React.FC = () => (
   <View style={styles.hero}>
-    <Text style={styles.title}>Pagos Financieros Modernos</Text>
-    <Text style={styles.subtitle}>Conecta tu app a la API de Interledger y realiza pagos globales de forma segura y rápida.</Text>
+  <Text style={styles.title}>Modern Financial Payments</Text>
+  <Text style={styles.subtitle}>Connect your app to the Interledger API and enable secure, fast, and borderless global payments for your users. Empower your business with seamless transactions and advanced financial technology designed for the future.</Text>
     <View style={styles.ctaWrapper}>
       <View style={styles.ctaGlass}>
-        <Text style={styles.ctaText}>Comenzar ahora</Text>
+  <Text style={styles.ctaText}>Get Started</Text>
       </View>
     </View>
   </View>
@@ -17,12 +17,14 @@ const Hero: React.FC = () => (
 const styles = StyleSheet.create({
   hero: {
     width: '100%',
-    minHeight: 320,
     backgroundColor: '#1C1C1C',
+    display: 'flex',
+    flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: 64,
-    paddingHorizontal: 24,
+    minHeight: 0,
+    textAlign: 'center',
+    padding: 0,
   },
   title: {
     fontSize: 38,

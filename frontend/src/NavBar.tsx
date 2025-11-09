@@ -75,11 +75,42 @@ const NavBar: React.FC<NavBarProps> = ({ onAction, userName }) => {
     };
   }, [menuOpen]);
 
+  const isMain = location.pathname === '/';
   return (
     <View style={styles.container}>
       <TouchableOpacity onPress={() => navigate('/')} activeOpacity={0.8}>
         <Logo width={50} height={50} />
       </TouchableOpacity>
+      {isMain && !userName && (
+        <>
+          <View style={styles.optionsAbsolute}>
+            {[ 
+              { label: 'Home', target: 'hero-section' },
+              { label: 'Key Features', target: 'features-section' },
+              { label: 'About VaroCo', target: 'about-section' },
+              { label: 'Contact & Support', target: 'contact-section' }
+            ].map(opt => (
+              <View key={opt.label} style={styles.optionWrapper}>
+                <TouchableOpacity
+                  onPress={() => {
+                    const el = document.getElementById(opt.target);
+                    if (el) {
+                      el.scrollIntoView({ behavior: 'smooth' });
+                    }
+                  }}
+                  activeOpacity={0.7}
+                  style={styles.option}
+                >
+                  <Text style={styles.option}>{opt.label}</Text>
+                </TouchableOpacity>
+              </View>
+            ))}
+          </View>
+          <TouchableOpacity style={styles.actionButton} onPress={onAction} activeOpacity={0.85}>
+            <Text style={styles.actionText}>Get Started</Text>
+          </TouchableOpacity>
+        </>
+      )}
       {userName && (
         <View style={isDashboard ? styles.userNameBox : styles.userNameButton}>
           <TouchableOpacity onPress={() => setMenuOpen(!menuOpen)} activeOpacity={0.8}>
@@ -91,13 +122,16 @@ const NavBar: React.FC<NavBarProps> = ({ onAction, userName }) => {
                 <span style={menuTextStyle}>Dashboard</span>
               </div>
               <div style={menuItemStyle} onClick={() => { setMenuOpen(false); navigate('/history'); }}>
-                <span style={menuTextStyle}>Historial de pagos</span>
+                <span style={menuTextStyle}>Payment History</span>
               </div>
               <div style={menuItemStyle} onClick={() => { setMenuOpen(false); navigate('/requests'); }}>
-                <span style={menuTextStyle}>Mis solicitudes</span>
+                <span style={menuTextStyle}>My Requests</span>
               </div>
               <div style={menuItemStyle} onClick={() => { setMenuOpen(false); navigate('/settings'); }}>
-                <span style={menuTextStyle}>Configuración</span>
+                <span style={menuTextStyle}>Settings</span>
+              </div>
+              <div style={{ ...menuItemStyle, borderBottom: 'none', color: '#d32f2f' }} onClick={() => { setMenuOpen(false); if (window.onLogout) window.onLogout(); }}>
+                <span style={{ ...menuTextStyle, color: '#d32f2f' }}>Log out</span>
               </div>
             </div>
           )}
@@ -173,17 +207,22 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     fontFamily: 'Inter, sans-serif',
   },
-  options: {
+  optionsAbsolute: {
+    position: 'absolute',
+    left: 0,
+    top: 0,
+    width: '100%',
+    height: '100%',
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    position: 'absolute',
-    left: 0,
-    width: '100%',
-    top: 0,
-    height: '100%',
     gap: 24,
     pointerEvents: 'none',
+  },
+  options: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 24,
   },
   optionWrapper: {
     borderRadius: 16,
