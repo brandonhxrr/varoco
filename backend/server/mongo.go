@@ -11,7 +11,8 @@ import (
 )
 
 type Env struct {
-	Db *mongo.Database
+	Db                  *mongo.Database
+	WalletAddressPrefix string
 }
 
 // NewEnvFromEnvVars creates an Env by connecting to MongoDB using environment variables.
@@ -45,5 +46,5 @@ func NewEnvFromEnvVars(ctx context.Context) (*Env, error) {
 		return nil, fmt.Errorf("error connecting to MongoDB: %w", err)
 	}
 
-	return &Env{Db: client.Database(dbName)}, nil
+	return &Env{Db: client.Database(dbName), WalletAddressPrefix: os.Getenv("OP_WALLET_ADDRESS_PREFIX")}, nil
 }
