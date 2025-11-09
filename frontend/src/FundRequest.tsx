@@ -7,7 +7,6 @@ const FundRequest: React.FC = () => {
   const [name, setName] = useState('');
   const [goal, setGoal] = useState('');
   const [amount, setAmount] = useState('');
-  const [customAmount, setCustomAmount] = useState('');
   const [options, setOptions] = useState<string[]>([]);
   const [showDeleteIdx, setShowDeleteIdx] = useState<number | null>(null);
   const [newOption, setNewOption] = useState('');
@@ -81,8 +80,29 @@ const FundRequest: React.FC = () => {
             ))}
           </View>
           <View style={[styles.formGroup, { marginTop: 16 }]}> 
-            <TextInput style={styles.input} value={newOption} onChangeText={setNewOption} placeholder="Agregar opción ($)" keyboardType="numeric" placeholderTextColor="#bbb" />
-            <TouchableOpacity style={styles.amountButton} onPress={() => { if (newOption) { setOptions([...options, newOption]); setNewOption(''); } }}>
+            <TextInput 
+              style={styles.input} 
+              value={newOption} 
+              onChangeText={setNewOption} 
+              placeholder="Agregar opción ($)" 
+              keyboardType="numeric" 
+              placeholderTextColor="#bbb"
+              onKeyPress={e => {
+                if (e.nativeEvent.key === 'Enter' && newOption.trim()) {
+                  setOptions([...options, newOption]);
+                  setNewOption('');
+                }
+              }}
+            />
+            <TouchableOpacity 
+              style={styles.amountButton} 
+              onPress={() => { 
+                if (newOption.trim()) { 
+                  setOptions([...options, newOption]); 
+                  setNewOption(''); 
+                } 
+              }}
+            >
               <Text style={styles.amountText}>Agregar opción</Text>
             </TouchableOpacity>
           </View>
