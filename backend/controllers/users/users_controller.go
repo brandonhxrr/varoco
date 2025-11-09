@@ -20,9 +20,10 @@ import (
 
 // createUserRequest is the incoming payload for user registration.
 type createUserRequest struct {
-	Name     string `json:"name"`
-	Email    string `json:"email"`
-	Password string `json:"password"`
+	Name          string `json:"name"`
+	Email         string `json:"email"`
+	Password      string `json:"password"`
+	WalletAddress string `json:"wallet_address"`
 }
 
 // createUserResponse is the response sent back to the client after creating a user.
@@ -81,7 +82,7 @@ func (ctrl *UsersController) CreateUser(env *server.Env, ctx context.Context) gi
 			Name:          strings.TrimSpace(req.Name),
 			Email:         email,
 			PasswordHash:  string(passwordHash),
-			WalletAddress: "",
+			WalletAddress: strings.TrimSpace(req.WalletAddress),
 			CreatedAt:     now,
 			UpdatedAt:     now,
 		}
@@ -104,9 +105,6 @@ func (ctrl *UsersController) CreateUser(env *server.Env, ctx context.Context) gi
 
 func (ctrl *UsersController) GetUsers(env *server.Env, ctx context.Context) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		ctx, cancel := context.WithTimeout(c.Request.Context(), 10*time.Second)
-		defer cancel()
-
 		usersCol := env.Db.Collection("users")
 		var users []models.User
 
@@ -128,9 +126,6 @@ func (ctrl *UsersController) GetUsers(env *server.Env, ctx context.Context) gin.
 
 func (ctrl *UsersController) GetUserByID(env *server.Env, ctx context.Context) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		ctx, cancel := context.WithTimeout(c.Request.Context(), 10*time.Second)
-		defer cancel()
-
 		usersCol := env.Db.Collection("users")
 		userID := c.Param("id")
 
@@ -151,9 +146,6 @@ func (ctrl *UsersController) GetUserByID(env *server.Env, ctx context.Context) g
 
 func (ctrl *UsersController) UpdateUser(env *server.Env, ctx context.Context) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		ctx, cancel := context.WithTimeout(c.Request.Context(), 10*time.Second)
-		defer cancel()
-
 		usersCol := env.Db.Collection("users")
 		userID := c.Param("id")
 
@@ -183,9 +175,6 @@ func (ctrl *UsersController) UpdateUser(env *server.Env, ctx context.Context) gi
 
 func (ctrl *UsersController) DeleteUser(env *server.Env, ctx context.Context) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		ctx, cancel := context.WithTimeout(c.Request.Context(), 10*time.Second)
-		defer cancel()
-
 		usersCol := env.Db.Collection("users")
 		userID := c.Param("id")
 
